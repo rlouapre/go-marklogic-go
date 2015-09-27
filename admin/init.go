@@ -9,7 +9,7 @@ import (
 
 	clients "github.com/ryanjdew/go-marklogic-go/clients"
 	handle "github.com/ryanjdew/go-marklogic-go/handle"
-	"github.com/ryanjdew/go-marklogic-go/util"
+	util "github.com/ryanjdew/go-marklogic-go/util"
 )
 
 // InitializeProperties represents a request for /admin/v1/init API
@@ -96,9 +96,9 @@ type RestartResponse struct {
 }
 
 type LastStartupElement struct {
-	XMLName xml.Name `xml:"last-startup" json:"-"`
-	Value   string   `xml:",chardata"`
-	HostId  string   `xml:"host-id,attr"`
+	XMLName xml.Name          `xml:"last-startup" json:"-"`
+	Value   util.DateTimeNano `xml:",chardata"`
+	HostId  string            `xml:"host-id,attr"`
 }
 
 type LinkElement struct {

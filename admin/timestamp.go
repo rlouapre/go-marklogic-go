@@ -2,10 +2,9 @@ package admin
 
 import (
 	"bytes"
-	_ "encoding/json"
-	_ "encoding/xml"
 	"net/http"
-	_ "strconv"
+	"strings"
+	"time"
 
 	clients "github.com/ryanjdew/go-marklogic-go/clients"
 	handle "github.com/ryanjdew/go-marklogic-go/handle"
@@ -17,7 +16,7 @@ import (
 type TimestampResponseHandle struct {
 	*bytes.Buffer
 	Format    int
-	timestamp string
+	timestamp time.Time
 }
 
 // GetFormat returns int that represents XML or JSON
@@ -37,7 +36,10 @@ func (rh *TimestampResponseHandle) Deserialize(bytes []byte) {
 	rh.resetBuffer()
 	rh.Write(bytes)
 	if rh.GetFormat() == handle.TEXTPLAIN {
-		rh.timestamp = string(bytes)
+		t, err := time.Parse(time.RFC3339Nano, strings.TrimSpace(string(bytes)))
+		if err == nil {
+			rh.timestamp = t
+		}
 	}
 }
 
@@ -48,20 +50,17 @@ func (rh *TimestampResponseHandle) AcceptResponse(resp *http.Response) error {
 
 // Serialize returns []byte of XML or JSON that represents the Response struct
 func (rh *TimestampResponseHandle) Serialize(response interface{}) {
-	// rh.timestamp = response
 	rh.resetBuffer()
 	if rh.GetFormat() == handle.TEXTPLAIN {
-		rh.timestamp = response.(string)
-		// 	enc := json.NewEncoder(rh.Buffer)
-		// 	enc.Encode(&rh.response)
-		// } else {
-		// 	enc := xml.NewEncoder(rh.Buffer)
-		// 	enc.Encode(&rh.response)
+		t, err := time.Parse(time.RFC3339Nano, response.(string))
+		if err == nil {
+			rh.timestamp = t
+		}
 	}
 }
 
 // Get returns string of XML or JSON
-func (rh *TimestampResponseHandle) Get() *string {
+func (rh *TimestampResponseHandle) Get() *time.Time {
 	return &rh.timestamp
 }
 
