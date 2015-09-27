@@ -51,7 +51,7 @@ func ClientBuilder(connection *Connection, base string) (*BasicClient, error) {
 }
 
 // NewClient creates the Client struct used for searching, etc.
-func NewClient(connection *Connection /*host string, port int64, username string, password string, authType int*/) (*Client, error) {
+func NewClient(connection *Connection) (*Client, error) {
 	var client *Client
 	base := "http://" + connection.Host + ":" + strconv.FormatInt(connection.Port, 10) + "/v1"
 	basicClient, err := ClientBuilder(connection, base)
