@@ -18,9 +18,11 @@ const (
 // Client is used for connecting to the MarkLogic REST API.
 type Client clients.Client
 
+type Connection clients.Connection
+
 // NewClient creates the Client struct used for searching, etc.
-func NewClient(host string, port int64, username string, password string, authType int) (*Client, error) {
-	client, err := clients.NewClient(&clients.Connection{Host: host, Port: port, Username: username, Password: password, AuthenticationType: authType})
+func NewClient(conn *Connection) (*Client, error) {
+	client, err := clients.NewClient(convertToClientConnection(conn))
 	return convertToClient(client), err
 }
 
@@ -51,5 +53,10 @@ func convertToSubClient(c *Client) *clients.Client {
 
 func convertToClient(c *clients.Client) *Client {
 	converted := Client(*c)
+	return &converted
+}
+
+func convertToClientConnection(conn *Connection) *clients.Connection {
+	converted := clients.Connection(*conn)
 	return &converted
 }
