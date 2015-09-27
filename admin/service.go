@@ -24,3 +24,11 @@ func (s *Service) Init(license handle.Handle, response handle.ResponseHandle) er
 func (s *Service) InstanceAdmin(username string, password string, realm string, response handle.ResponseHandle) error {
 	return instanceAdmin(s.client, username, password, realm, response)
 }
+
+func (s *Service) Timestamp(response handle.ResponseHandle) error {
+	return timestamp(s.client, response)
+}
+
+func (s *Service) ServerConfig(response handle.ResponseHandle) error {
+	return serverConfig(s.client, response)
+}
